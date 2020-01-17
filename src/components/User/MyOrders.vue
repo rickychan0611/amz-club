@@ -70,8 +70,10 @@
                 </span>
 
                 <span  v-if="dayCount(order.userReserveDate).todayOKtime == 'TODAY'">
-                  at
-                <span class="red--text font-weight-bold">{{dayCount(order.userReserveDate).day}}</span>
+                  by
+                <span class="red--text font-weight-bold"> <app-formatDate :date="order.userReserveDate" /></span>
+                <br />
+                *Please remember to buy it from amazon on the same day, otherwise your order may not be valid. 
                 </span>
 
               </span>
