@@ -100,7 +100,9 @@
                       <span
                         v-if="!order.orderPlaced"
                         class="grey--text"
-                      > Haven't bought yet <app-formatDate :date="order.userReserveDate" /></span>
+                      > Haven't bought yet <app-formatDate :date="order.userReserveDate" />
+                    {{ checkToday(order.userReserveDate, order, item.id) }}
+                  </span>
                       <!-- <span v-if="checkToday(order.userReserveDate, order)"> getting today</span> -->
                       <!-- {{ checkToday(order.userReserveDate, order, item.id) }} -->
                       <span
@@ -292,6 +294,7 @@ export default {
       }
     },
     checkToday (date, order, id) {
+      console.log("CHECK TODay")
       let userId = { 'userId': id }
       Object.assign(order, userId)
       let now = new Date(this.$store.getters.today)
@@ -302,11 +305,11 @@ export default {
       let expireTime = Math.round((endTime - now) / (60 * 60 * 1000))
       // //console.log('expireTime' + expireTime)
       if (expireTime <= 24 && expireTime >= 0) {
-        return 'expire in ' + expireTime + ' hr'
+        return 'expire in~ ' + expireTime + ' hr'
       } else if (expireTime > 24) {
-        return 'expire in' + expireTime + ' hr'
+        return 'expire in:' + expireTime + ' hr'
       }
-      console.log('order.orderPlaced '+this.expiredOrder)
+      console.log('order.orderPlaced '+ this.expiredOrder)
       if (order.orderPlaced === false) {
         if (expireTime < 0) {
           // automatic del all expired orders
@@ -314,7 +317,7 @@ export default {
           console.log('expired item del: ' + this.expiredOrder)
           this.expiredOrder++
           // console.log('del')
-          return 'Del'
+          return
           // del item
         }
         //return 'nothing happened'

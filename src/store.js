@@ -16,7 +16,7 @@ export default new Vuex.Store({
     error: '',
     today: '',
     // today: new Date(),
-    // today: new Date('Fri sep 8 2019 2:30:00 GMT-0700 (Pacific Daylight Time)'),
+    // today: new Date("Wed Jan 17 2020 00:25:32 GMT-0800 (Pacific Standard Time)"),
     lockedSellers: [],
     facebookLoading: true,
     allBuyers: {}

@@ -428,6 +428,7 @@ export default {
     },
     checkToday (date, order) {
       let now = new Date(this.$store.getters.today)
+      console.log('now:' + now)
       let reservedDate = new Date(date)
       // console.log(reservedDate)
       let endTime = new Date(date)
@@ -440,6 +441,7 @@ export default {
       } else if (expireTime > 24) {
         return false
       } else if (expireTime < 0) {
+        console.log('item expired and deleted')
         if (order.orderPlaced == false) {
           this.$store.dispatch('delOrder', order)
         }
