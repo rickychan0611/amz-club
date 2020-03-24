@@ -457,7 +457,7 @@ export default {
       let earning = this.earning(item) + this.todayEarning
       if (item.sellerWechat && item.name && item.buyer) {
         firebase.database().ref('sellers/' + item.sellerWechat + '/' + item.name + '/' + item.buyer)
-          .update({ 'refunded': true, 'refundAmg': item.refundAmg, 'earning': this.earning(item), 'refundDate': today })
+          .update({ 'refunded': true, 'paypalGotMoney': item.paypalGotMoney, 'earning': this.earning(item), 'refundDate': today })
       }
       if (item.buyerId && item.id) {
         firebase.database().ref('buyers/' + item.buyerId + '/placedOrders/' + item.id).update({ 'refunded': true })
