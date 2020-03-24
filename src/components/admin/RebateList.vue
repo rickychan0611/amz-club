@@ -124,10 +124,10 @@
               <td>
                 <input
                   style="width: 50px"
-                v-model="item.refundAmg"
-                type="text"
-                class="gray--text caption border"
-                ></input>
+                  v-model="item.paypalGotMoney"
+                  type="text"
+                  class="gray--text caption border"
+                  ></input>
               </td>
               <td>{{ earning(item) }}</td>
               <td>
@@ -215,7 +215,10 @@
           >
             <tr>
               <td>{{year}}</td>
-              <td v-for="(month, index) in monthlyIncome">{{parseFloat((month).toFixed(2))}}</td>
+              <td v-for="(item, index) in monthlyIncome">
+                <div v-if="year === item.year ">{{parseFloat((item.earning).toFixed(2))}}</div>
+                <div v-if="year != item.year ">0</div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -342,7 +345,8 @@ export default {
         for (let j in obj[i]) {
           for (let k in obj[i][j]) {
             // console.log("b: " + JSON.stringify(obj[i][j][k].refundImg))
-            if (obj[i][j][k].refundImg) {
+            // if there is a refund image, push that user into rebateArr
+            if (obj[i][j][k].refundImg || obj[i][j][k].paypalGotMoney) {
               if (!obj[i][j][k].refunded) {
 
                 this.rebateArr.push(obj[i][j][k])
@@ -373,28 +377,20 @@ export default {
             this.myTotalEarning = this.myTotalEarning + this.account[a][b][c].earning
             myMonthlyEarning = myMonthlyEarning + this.account[a][b][c].earning
             let checkday = new Date(a + b + c)
-            // console.log(today)
-            console.log('today: ' + today.getDate() + (today.getMonth()+1) + today.getFullYear())
-            console.log('checkday: ' + checkday.getDate() + (checkday.getMonth()+1) + checkday.getFullYear())
             const todayD = (today.getDate() + '-' + (today.getMonth()+1) + '-' + today.getFullYear())
             const checkdayD = (checkday.getDate() + '-' + (checkday.getMonth()+1) + '-' + checkday.getFullYear())
-            console.log(todayD == checkdayD)
             if (todayD == checkdayD) {
-
-            // if (today.getDate() + (today.getMonth()+1) + today.getFullYear() === checkday.getDate() + (checkday.getMonth()+1) + checkday.getFullYear()) {
-              console.log('YES')
               this.todayEarning = this.account[a][b][c].earning
-              console.log('yes today' + this.todayEarning)
             }
           }
-          for (let u in this.allMonths) {
-
-            if (b == this.allMonths[u]) {
-              this.monthlyIncome[u] = myMonthlyEarning
+          for (let yr in this.years) {
+            for (let mon in this.allMonths) {
+              if (b === this.allMonths[mon]) {
+                this.monthlyIncome[mon] = { 'year': this.years[yr], 'month': b, 'earning': myMonthlyEarning }
+                console.log('monthlyIncome' + JSON.stringify(this.monthlyIncome))
+              }
             }
           }
-
-console.log('month ' + this.monthlyIncome)
           // this.monthlyBill.push({'month':b, 'earning':myMonthlyEarning})
         }
       }
@@ -440,7 +436,7 @@ console.log('month ' + this.monthlyIncome)
       return 99
     },
     earning (item) {
-      return parseFloat((item.refundAmg - item.rebate).toFixed(2))
+      return parseFloat((item.paypalGotMoney - item.rebate).toFixed(2))
     },
     onSave (item) {
       this.edit = !this.edit

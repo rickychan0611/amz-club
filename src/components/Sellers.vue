@@ -177,14 +177,7 @@
                       mdi-upload
                     </v-icon>upload
                   </v-btn>
-                  paypal earning:
-                  <input
-                  v-model.earning="item.paypal"
-                  type="number"
-                  style="width:60px"
-                  class="edit_input"
-                  ></input>
-                  {{item.paypal}}
+
                   <v-btn
                     v-if="item.refundImg"
                     fab
@@ -205,6 +198,19 @@
                   >
                 </div>
                 </input>
+                <br />
+                paypalGotMoney:
+                <input
+                v-model.earning="item.paypalGotMoney"
+                type="number"
+                style="width:60px"
+                class="edit_input"
+                ></input>
+                {{item.paypalGotMoney}}<v-btn small
+                  @click="onSave(item)"
+                >
+                  Save
+                </v-btn>
               </td>
               <td v-if="!item.refundImg || !item.reviewUrl">
                 <v-icon class="green--text" />
@@ -252,7 +258,8 @@ export default {
       sortByReview: true,
       imageUrl: '',
       orderDateSortClicked: false,
-      productSortClicked: false
+      productSortClicked: false,
+      paypalGotMoney: 0
     }
   },
   created () {
@@ -302,7 +309,7 @@ export default {
                 'reviewToldSeller': this.reviewToldSeller,
                 earning: 0,
                 note: '',
-                paypal: 0
+                paypalGotMoney: obj[i][j].paypalGotMoney
               })
             }
           }
@@ -471,6 +478,7 @@ export default {
             return downloadURL
           })
             .then((downloadURL) => {
+              //store img url to database
               firebase.database().ref('sellers/' + this.id + '/' + item.productName + '/' + item.buyer).update({ 'refundImg': downloadURL })
             })
             .then(() => {
@@ -500,7 +508,7 @@ export default {
       // this.$store.dispatch('createProduct', this.obj)
       let updatePrices = {}
       item.dealPrice = (item.listPrice - item.coupon - item.rebate).toFixed(2)
-      updatePrices = {'listPrice': item.listPrice, 'coupon': item.coupon, 'rebate': item.rebate, 'dealPrice': item.dealPrice}
+      updatePrices = {'listPrice': item.listPrice, 'coupon': item.coupon, 'rebate': item.rebate, 'dealPrice': item.dealPrice, 'paypalGotMoney': item.paypalGotMoney}
       firebase.database().ref('sellers/' + item.sellerWechat + '/' + item.name + '/' + item.buyer).update(updatePrices)
       firebase.database().ref('buyers/' + item.buyerId + '/placedOrders/' + item.id).update(updatePrices)
     }

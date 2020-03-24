@@ -53,7 +53,7 @@
                 Name
               </th>
               <th scope="col">
-                Placed Orders /  expired order deleted: {{expiredOrder}}
+                Placed Orders /  expired order deleted: {{JSON.stringify(deletedOrder)}}
               </th>
               <th scope="col">
                 Del user
@@ -226,7 +226,8 @@ export default {
       obj: {},
       openUserDialog: false,
       userInfo: {},
-      expiredOrder: 0
+      expiredOrder: 0,
+      deletedOrder: []
     }
   },
   created () {
@@ -310,12 +311,14 @@ export default {
         return 'expire in:' + expireTime + ' hr'
       }
       console.log('order.orderPlaced '+ this.expiredOrder)
-      if (order.orderPlaced === false) {
+      if (order.orderPlaced === false && order.checked === undefined) {
         if (expireTime < 0) {
+          order.checked = true
           // automatic del all expired orders
           this.$store.dispatch('BuyerListDelOrder', order)
           console.log('expired item del: ' + this.expiredOrder)
           this.expiredOrder++
+          this.deletedOrder.push(order)
           // console.log('del')
           return
           // del item
